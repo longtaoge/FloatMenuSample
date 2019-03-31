@@ -18,7 +18,7 @@
             防止横竖屏切换时重新执行oncreate-->
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="sensor"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>

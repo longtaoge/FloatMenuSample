@@ -17,11 +17,13 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -96,18 +98,18 @@ public abstract class BaseFloatDailog {
     /**
      * 记录屏幕的宽度
      */
-    private int mScreenWidth;
+    protected int mScreenWidth;
 
     /**
      * 来自 activity 的 wManager
      */
-    private WindowManager wManager;
+    protected WindowManager wManager;
 
 
     /**
      * 为 wManager 设置 LayoutParams
      */
-    private WindowManager.LayoutParams wmParams;
+    protected WindowManager.LayoutParams wmParams;
 
 
     /**
@@ -641,6 +643,7 @@ public abstract class BaseFloatDailog {
     }
 
 
+
     /**
      * 更新悬浮窗在屏幕中的位置。
      */
@@ -773,4 +776,42 @@ public abstract class BaseFloatDailog {
                 dp,
                 mContext.getResources().getDisplayMetrics());
     }
+
+
+    public void onConfigurationChanged(Configuration newConfig) {
+
+
+        // 更新浮动窗口位置参数 靠边
+        DisplayMetrics dm = new DisplayMetrics();
+        // 获取屏幕信息
+        wManager.getDefaultDisplay().getMetrics(dm);
+        mScreenWidth = dm.widthPixels;
+        // mScreenHeight = dm.heightPixels;
+        int oldX = wmParams.x;
+        int oldY = wmParams.y;
+        switch (newConfig.orientation) {
+            case Configuration.ORIENTATION_LANDSCAPE://横屏
+                if (mHintLocation == RIGHT) {
+                    wmParams.x = mScreenWidth;
+                    wmParams.y = oldY;
+                } else {
+                    wmParams.x = oldX;
+                    wmParams.y = oldY;
+                }
+                break;
+            case Configuration.ORIENTATION_PORTRAIT://竖屏
+                if (mHintLocation == RIGHT) {
+                    wmParams.x = mScreenWidth;
+                    wmParams.y = oldY;
+                } else {
+                    wmParams.x = oldX;
+                    wmParams.y = oldY;
+                }
+                break;
+        }
+        openMenu();
+
+       // wManager.updateViewLayout(this, wmParams);
+    }
+
 }
